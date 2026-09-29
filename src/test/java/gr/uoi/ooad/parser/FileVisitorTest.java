@@ -2,8 +2,7 @@ package gr.uoi.ooad.parser;
 
 import static gr.uoi.ooad.parser.tree.NodeType.CLASS;
 import static gr.uoi.ooad.parser.tree.NodeType.INTERFACE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import gr.uoi.ooad.parser.factory.Parser;
 import gr.uoi.ooad.parser.factory.ParserType;
@@ -167,11 +166,31 @@ public class FileVisitorTest {
         PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
 
         LeafNode implementingClass = inheritancePackage.getLeafNodes().get("ImplementingClass");
+        LeafNode extensionClass = inheritancePackage.getLeafNodes().get("ExtensionClass");
+
         assertEquals(2, implementingClass.implementedInterfaces().size());
         assertTrue(implementingClass.implementedInterfaces().contains("TestingInterface"));
         assertTrue(implementingClass.implementedInterfaces().contains("TestingInterface2"));
-
         assertEquals("ExtensionClass", implementingClass.baseClass());
+
+        assertEquals(CLASS, extensionClass.nodeType());
+        assertEquals("", extensionClass.baseClass());
+        assertTrue(extensionClass.implementedInterfaces().isEmpty());
+
+        // innerClassSample
+        LeafNode innerClassSample = inheritancePackage.getLeafNodes().get("InnerClassSample");
+
+        assertEquals("ExtensionClass", innerClassSample.baseClass());
+        assertEquals(CLASS, innerClassSample.nodeType());
+        assertTrue(innerClassSample.implementedInterfaces().isEmpty());
+
+        // InnerClass
+        assertEquals(1, innerClassSample.innerClasses().size());
+        LeafNode innerClass = innerClassSample.innerClasses().get(0);
+
+        assertEquals("ObjectCreationSample", innerClass.baseClass());
+        assertEquals(1, innerClass.implementedInterfaces().size());
+        assertTrue(innerClass.implementedInterfaces().contains("TestingInterface"));
     }
 
     @Test
