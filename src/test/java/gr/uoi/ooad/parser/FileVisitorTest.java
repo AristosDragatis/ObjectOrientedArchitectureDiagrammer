@@ -191,6 +191,20 @@ public class FileVisitorTest {
         assertEquals("ObjectCreationSample", innerClass.baseClass());
         assertEquals(1, innerClass.implementedInterfaces().size());
         assertTrue(innerClass.implementedInterfaces().contains("TestingInterface"));
+
+        // Testing Interface
+        LeafNode testingInterface = inheritancePackage.getLeafNodes().get("TestingInterface");
+
+        assertEquals(INTERFACE, testingInterface.nodeType());
+        assertEquals("", testingInterface.baseClass());
+        assertTrue(testingInterface.implementedInterfaces().isEmpty());
+
+        // Enum Sample
+        LeafNode enumSample = inheritancePackage.getLeafNodes().get("EnumSample");
+
+        assertEquals(NodeType.ENUM, enumSample.nodeType());
+        assertEquals("", enumSample.baseClass());
+        assertTrue(enumSample.implementedInterfaces().isEmpty());
     }
 
     @Test
