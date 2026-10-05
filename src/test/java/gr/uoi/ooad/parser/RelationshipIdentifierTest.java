@@ -39,42 +39,100 @@ public class RelationshipIdentifierTest {
         // keep all leafNode relationships
         Set<Relationship<LeafNode>> leafNodeRelationships = relationships.get(leafNode);
 
-        boolean isRelationship =
+        boolean isExtension =
                 leafNodeRelationships.stream()
                         .anyMatch(
                                 r ->
                                         r.endingNode().nodeName().equals("ExtensionClass")
                                                 && r.relationshipType().equals(EXTENSION));
 
-        assertTrue(isRelationship);
+        assertTrue(isExtension);
     }
 
-
     @Test
-    void implementingClassImplementsTestingInterface(){
+    void implementingClassImplementsTestingInterface() {
         PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
         LeafNode leafNode = inheritancePackage.getLeafNodes().get("ImplementingClass");
 
         Set<Relationship<LeafNode>> leafNodeRelationships = relationships.get(leafNode);
 
         // TestingInterface
-        boolean isImplementation = leafNodeRelationships.stream().anyMatch(r -> r.endingNode().nodeName().equals("TestingInterface") && r.relationshipType().equals(IMPLEMENTATION));
+        boolean isImplementation =
+                leafNodeRelationships.stream()
+                        .anyMatch(
+                                r ->
+                                        r.endingNode().nodeName().equals("TestingInterface")
+                                                && r.relationshipType().equals(IMPLEMENTATION));
 
         assertTrue(isImplementation);
     }
 
-
     @Test
-    void implementingClassImplementsTestingInterface2(){
+    void implementingClassImplementsTestingInterface2() {
         PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
         LeafNode leafNode = inheritancePackage.getLeafNodes().get("ImplementingClass");
 
         Set<Relationship<LeafNode>> leafNodeRelationships = relationships.get(leafNode);
 
         // TestingInterface2
-        boolean isImplementation2 = leafNodeRelationships.stream().anyMatch(r -> r.endingNode().nodeName().equals("TestingInterface2") && r.relationshipType().equals(IMPLEMENTATION));
+        boolean isImplementation2 =
+                leafNodeRelationships.stream()
+                        .anyMatch(
+                                r ->
+                                        r.endingNode().nodeName().equals("TestingInterface2")
+                                                && r.relationshipType().equals(IMPLEMENTATION));
 
         assertTrue(isImplementation2);
     }
 
+    @Test
+    void innerClassSampleExtendsExtensionClass() {
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+        LeafNode leafNode = inheritancePackage.getLeafNodes().get("InnerClassSample");
+
+        Set<Relationship<LeafNode>> leafNodeRelationships = relationships.get(leafNode);
+
+        boolean isExtension =
+                leafNodeRelationships.stream()
+                        .anyMatch(
+                                r ->
+                                        r.endingNode().nodeName().equals("ExtensionClass")
+                                                && r.relationshipType().equals(EXTENSION));
+
+        assertTrue(isExtension);
+    }
+
+    @Test
+    void innerClassSampleExtendsObjectCreationSample() {
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+        LeafNode leafNode = inheritancePackage.getLeafNodes().get("InnerClassSample");
+
+        Set<Relationship<LeafNode>> leafNodeRelationships = relationships.get(leafNode);
+
+        boolean isExtension =
+                leafNodeRelationships.stream()
+                        .anyMatch(
+                                r ->
+                                        r.endingNode().nodeName().equals("ObjectCreationSample")
+                                                && r.relationshipType().equals(EXTENSION));
+
+        assertTrue(isExtension);
+    }
+
+    @Test
+    void innerClassSampleImplementsTestingInterface() {
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+        LeafNode leafNode = inheritancePackage.getLeafNodes().get("InnerClassSample");
+
+        Set<Relationship<LeafNode>> leafNodeRelationships = relationships.get(leafNode);
+
+        boolean isImplementation =
+                leafNodeRelationships.stream()
+                        .anyMatch(
+                                r ->
+                                        r.endingNode().nodeName().equals("TestingInterface")
+                                                && r.relationshipType().equals(IMPLEMENTATION));
+
+        assertTrue(isImplementation);
+    }
 }
