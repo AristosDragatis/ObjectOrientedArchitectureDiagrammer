@@ -1,6 +1,7 @@
 package gr.uoi.ooad.parser;
 
 import static gr.uoi.ooad.parser.tree.RelationshipType.EXTENSION;
+import static gr.uoi.ooad.parser.tree.RelationshipType.IMPLEMENTATION;
 import static org.junit.jupiter.api.Assertions.*;
 
 import gr.uoi.ooad.parser.factory.Parser;
@@ -32,8 +33,8 @@ public class RelationshipIdentifierTest {
 
     @Test
     void implementingClassExtendsExtensionClass() {
-        PackageNode packageNode = packages.get(ParserTesting.SRC.path);
-        LeafNode leafNode = packageNode.getLeafNodes().get("ImplementingClass");
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+        LeafNode leafNode = inheritancePackage.getLeafNodes().get("ImplementingClass");
 
         // keep all leafNode relationships
         Set<Relationship<LeafNode>> leafNodeRelationships = relationships.get(leafNode);
@@ -47,4 +48,33 @@ public class RelationshipIdentifierTest {
 
         assertTrue(isRelationship);
     }
+
+
+    @Test
+    void implementingClassImplementsTestingInterface(){
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+        LeafNode leafNode = inheritancePackage.getLeafNodes().get("ImplementingClass");
+
+        Set<Relationship<LeafNode>> leafNodeRelationships = relationships.get(leafNode);
+
+        // TestingInterface
+        boolean isImplementation = leafNodeRelationships.stream().anyMatch(r -> r.endingNode().nodeName().equals("TestingInterface") && r.relationshipType().equals(IMPLEMENTATION));
+
+        assertTrue(isImplementation);
+    }
+
+
+    @Test
+    void implementingClassImplementsTestingInterface2(){
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+        LeafNode leafNode = inheritancePackage.getLeafNodes().get("ImplementingClass");
+
+        Set<Relationship<LeafNode>> leafNodeRelationships = relationships.get(leafNode);
+
+        // TestingInterface2
+        boolean isImplementation2 = leafNodeRelationships.stream().anyMatch(r -> r.endingNode().nodeName().equals("TestingInterface2") && r.relationshipType().equals(IMPLEMENTATION));
+
+        assertTrue(isImplementation2);
+    }
+
 }
