@@ -161,17 +161,10 @@ public class FileVisitorTest {
     @Test
     void inheritanceTest() {
         Parser parser = ProjectParserFactory.createProjectParser(parserType);
-
         Map<Path, PackageNode> packages = parser.parseSourcePackage(ParserTesting.SRC.path);
         PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
 
-        LeafNode implementingClass = inheritancePackage.getLeafNodes().get("ImplementingClass");
         LeafNode extensionClass = inheritancePackage.getLeafNodes().get("ExtensionClass");
-
-        assertEquals(2, implementingClass.implementedInterfaces().size());
-        assertTrue(implementingClass.implementedInterfaces().contains("TestingInterface"));
-        assertTrue(implementingClass.implementedInterfaces().contains("TestingInterface2"));
-        assertEquals("ExtensionClass", implementingClass.baseClass());
 
         assertEquals(CLASS, extensionClass.nodeType());
         assertEquals("", extensionClass.baseClass());
@@ -205,6 +198,21 @@ public class FileVisitorTest {
         assertEquals(NodeType.ENUM, enumSample.nodeType());
         assertEquals("", enumSample.baseClass());
         assertTrue(enumSample.implementedInterfaces().isEmpty());
+    }
+
+
+    @Test
+    void classWithExtensionAndMultipleInterfacesTest() {
+        Parser parser = ProjectParserFactory.createProjectParser(parserType);
+        Map<Path, PackageNode> packages = parser.parseSourcePackage(ParserTesting.SRC.path);
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+
+        LeafNode implementingClass = inheritancePackage.getLeafNodes().get("ImplementingClass");
+
+        assertEquals(2, implementingClass.implementedInterfaces().size());
+        assertTrue(implementingClass.implementedInterfaces().contains("TestingInterface"));
+        assertTrue(implementingClass.implementedInterfaces().contains("TestingInterface2"));
+        assertEquals("ExtensionClass", implementingClass.baseClass());
     }
 
     @Test
