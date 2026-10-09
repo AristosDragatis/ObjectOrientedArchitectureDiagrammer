@@ -158,49 +158,7 @@ public class FileVisitorTest {
         assertEquals(CLASS, objectCreationTest.nodeType());
     }
 
-    @Test
-    void inheritanceTest() {
-        Parser parser = ProjectParserFactory.createProjectParser(parserType);
-        Map<Path, PackageNode> packages = parser.parseSourcePackage(ParserTesting.SRC.path);
-        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
-
-        LeafNode extensionClass = inheritancePackage.getLeafNodes().get("ExtensionClass");
-
-        assertEquals(CLASS, extensionClass.nodeType());
-        assertEquals("", extensionClass.baseClass());
-        assertTrue(extensionClass.implementedInterfaces().isEmpty());
-
-        // innerClassSample
-        LeafNode innerClassSample = inheritancePackage.getLeafNodes().get("InnerClassSample");
-
-        assertEquals("ExtensionClass", innerClassSample.baseClass());
-        assertEquals(CLASS, innerClassSample.nodeType());
-        assertTrue(innerClassSample.implementedInterfaces().isEmpty());
-
-        // InnerClass
-        assertEquals(1, innerClassSample.innerClasses().size());
-        LeafNode innerClass = innerClassSample.innerClasses().get(0);
-
-        assertEquals("ObjectCreationSample", innerClass.baseClass());
-        assertEquals(1, innerClass.implementedInterfaces().size());
-        assertTrue(innerClass.implementedInterfaces().contains("TestingInterface"));
-
-        // Testing Interface
-        LeafNode testingInterface = inheritancePackage.getLeafNodes().get("TestingInterface");
-
-        assertEquals(INTERFACE, testingInterface.nodeType());
-        assertEquals("", testingInterface.baseClass());
-        assertTrue(testingInterface.implementedInterfaces().isEmpty());
-
-        // Enum Sample
-        LeafNode enumSample = inheritancePackage.getLeafNodes().get("EnumSample");
-
-        assertEquals(NodeType.ENUM, enumSample.nodeType());
-        assertEquals("", enumSample.baseClass());
-        assertTrue(enumSample.implementedInterfaces().isEmpty());
-    }
-
-
+    // Inheritance Testing is split into 6 individual tests.
     @Test
     void classWithExtensionAndMultipleInterfacesTest() {
         Parser parser = ProjectParserFactory.createProjectParser(parserType);
@@ -213,6 +171,73 @@ public class FileVisitorTest {
         assertTrue(implementingClass.implementedInterfaces().contains("TestingInterface"));
         assertTrue(implementingClass.implementedInterfaces().contains("TestingInterface2"));
         assertEquals("ExtensionClass", implementingClass.baseClass());
+    }
+
+    @Test
+    void classWithNoInheritanceHasEmptyBaseClassAndInterfacesTest() {
+        Parser parser = ProjectParserFactory.createProjectParser(parserType);
+        Map<Path, PackageNode> packages = parser.parseSourcePackage(ParserTesting.SRC.path);
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+
+        LeafNode extensionClass = inheritancePackage.getLeafNodes().get("ExtensionClass");
+
+        assertEquals(CLASS, extensionClass.nodeType());
+        assertEquals("", extensionClass.baseClass());
+        assertTrue(extensionClass.implementedInterfaces().isEmpty());
+    }
+
+    @Test
+    void classWithInnerClassParsesOwnInheritanceTest() {
+        Parser parser = ProjectParserFactory.createProjectParser(parserType);
+        Map<Path, PackageNode> packages = parser.parseSourcePackage(ParserTesting.SRC.path);
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+
+        LeafNode innerClassSample = inheritancePackage.getLeafNodes().get("InnerClassSample");
+
+        assertEquals("ExtensionClass", innerClassSample.baseClass());
+        assertEquals(CLASS, innerClassSample.nodeType());
+        assertTrue(innerClassSample.implementedInterfaces().isEmpty());
+    }
+
+    @Test
+    void innerClassInheritanceIsCapturedOnInnerLeafNodeTest() {
+        Parser parser = ProjectParserFactory.createProjectParser(parserType);
+        Map<Path, PackageNode> packages = parser.parseSourcePackage(ParserTesting.SRC.path);
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+
+        LeafNode innerClassSample = inheritancePackage.getLeafNodes().get("InnerClassSample");
+        assertEquals(1, innerClassSample.innerClasses().size());
+        LeafNode innerClass = innerClassSample.innerClasses().get(0);
+
+        assertEquals("ObjectCreationSample", innerClass.baseClass());
+        assertEquals(1, innerClass.implementedInterfaces().size());
+        assertTrue(innerClass.implementedInterfaces().contains("TestingInterface"));
+    }
+
+    @Test
+    void interfaceHasEmptyBaseClassAndNoImplementedInterfacesTest() {
+        Parser parser = ProjectParserFactory.createProjectParser(parserType);
+        Map<Path, PackageNode> packages = parser.parseSourcePackage(ParserTesting.SRC.path);
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+
+        LeafNode testingInterface = inheritancePackage.getLeafNodes().get("TestingInterface");
+
+        assertEquals(INTERFACE, testingInterface.nodeType());
+        assertEquals("", testingInterface.baseClass());
+        assertTrue(testingInterface.implementedInterfaces().isEmpty());
+    }
+
+    @Test
+    void enumHasEmptyBaseClassAndNoImplementedInterfacesTest() {
+        Parser parser = ProjectParserFactory.createProjectParser(parserType);
+        Map<Path, PackageNode> packages = parser.parseSourcePackage(ParserTesting.SRC.path);
+        PackageNode inheritancePackage = packages.get(ParserTesting.SRC.path);
+
+        LeafNode enumSample = inheritancePackage.getLeafNodes().get("EnumSample");
+
+        assertEquals(NodeType.ENUM, enumSample.nodeType());
+        assertEquals("", enumSample.baseClass());
+        assertTrue(enumSample.implementedInterfaces().isEmpty());
     }
 
     @Test
